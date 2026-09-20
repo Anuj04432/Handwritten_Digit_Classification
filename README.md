@@ -11,7 +11,7 @@ This project builds, trains, diagnoses, and optimizes a Multi-Layer Perceptron (
 Key milestones achieved:
 - **Data Preprocessing:** Rescaled 70,000 grayscale images ($28 \times 28$ pixels) to $[0.0, 1.0]$.
 - **Overfitting Diagnosis:** Identified severe overfitting in the baseline model via training/validation loss curve analysis.
-- **Regularization:** Applied **Dropout (0.2)** to eliminate overfitting, cutting test loss by more than **52%**.
+- **Regularization:** Applied **Dropout (0.2)** to eliminate overfitting, cutting test loss by more than **52%** (`0.1477` $\rightarrow$ `0.0707`).
 - **Comprehensive Evaluation:** Evaluated on 10,000 unseen test images, generating a full Confusion Matrix and per-digit Classification Report.
 - **Interactive Inference:** Added user-input capabilities (custom image upload with automatic color inversion and interactive index inspection).
 
@@ -24,6 +24,8 @@ The **MNIST** (Modified National Institute of Standards and Technology) dataset 
 - **Testing Samples:** 10,000 images
 - **Image Size:** $28 \times 28$ pixels (grayscale)
 - **Classes:** 10 digits (`0` to `9`)
+
+![MNIST Sample Digits](assets/sample_digits.png)
 
 ---
 
@@ -64,14 +66,26 @@ Input (28 x 28)
 | **Test Accuracy** | `97.48%` | **`98.00%`** | **+0.52% boost** (9,800/10,000 correct) |
 | **Test Loss** | `0.1477` | **`0.0707`** | **52% lower loss** |
 
+![Model Comparison](assets/normal_vs_dropout_comparison.png)
+
 ### Why Dropout Made the Difference
-Without Dropout, the model rapidly memorized individual pixel positions from the training set, causing the validation loss to almost double. Adding `Dropout(0.2)` prevented neuron co-adaptation, forcing the network to learn robust, general features (loops, strokes, curves).
+Without Dropout, the model rapidly memorized individual pixel positions from the training set, causing the validation loss to almost double:
+
+![Baseline Loss Overfitting](assets/baseline_loss_overfitting.png)
+
+Adding `Dropout(0.2)` prevented neuron co-adaptation, forcing the network to learn robust, general features (loops, strokes, curves) and stabilizing learning:
+
+![Dropout Learning Curves](assets/dropout_learning_curves.png)
 
 ---
 
 ## 📈 Evaluation & Results
 
-### Classification Report (10,000 Test Images)
+### Confusion Matrix (10,000 Test Images)
+
+![Confusion Matrix](assets/confusion_matrix.png)
+
+### Classification Report
 
 ```text
               precision    recall  f1-score   support
@@ -95,6 +109,10 @@ weighted avg       0.98      0.98      0.98     10000
 - **Easiest Digits:** `0` and `1` achieved **99% F1-score**.
 - **Challenging Digits:** `3`, `5`, and `8` achieved **97% F1-score** due to visual overlap in handwritten styles.
 
+### Sample Model Predictions
+
+![Sample Predictions](assets/sample_predictions.png)
+
 ---
 
 ## 🚀 How to Run the Project
@@ -102,7 +120,7 @@ weighted avg       0.98      0.98      0.98     10000
 ### 1. Prerequisites
 Install required dependencies:
 ```bash
-pip install tensorflow numpy matplotlib seaborn scikit-learn pillow
+pip install -r requirements.txt
 ```
 
 ### 2. Run the Notebook
@@ -130,9 +148,17 @@ The notebook includes two interactive ways to test the model:
 
 ```text
 Handwritten_Digit_Classification/
+├── assets/                                  # Plots & visual analysis images
+│   ├── sample_digits.png
+│   ├── baseline_accuracy.png
+│   ├── baseline_loss_overfitting.png
+│   ├── dropout_learning_curves.png
+│   ├── normal_vs_dropout_comparison.png
+│   ├── confusion_matrix.png
+│   └── sample_predictions.png
 ├── handwritten_digit_classification.ipynb   # Main Jupyter notebook with all code & visualizations
 ├── README.md                                # Project documentation
-├── pyproject.toml                           # Project metadata
+├── pyproject.toml                           # Project configuration
 └── requirements.txt                         # Dependencies list
 ```
 
